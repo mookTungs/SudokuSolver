@@ -84,47 +84,38 @@ public class SudokuSolver{
 		//square 1 (0,0)
 		int x = 0;
 		int y = 0;
-		//System.out.println("\nsquare 1\n");
 		if(hor < 3){
 			if(ver > 2 && ver < 6){
 				//square 2 (0,3)
-				//System.out.println("\nsquare 2\n");
 				y = 3;
 			}
 			if(ver > 5){
 				//square 3 (0,6)
-				//System.out.println("\nsquare 3\n");
 				y = 6;
 			}
 		}
 	
 		if(hor > 2 && hor < 6){
 			//square 4 (3,0)
-			//System.out.println("\nsquare 4\n");
 			x = 3;
 			if(ver > 2 && ver < 6){
 				//square 5 (3,3)
-				//System.out.println("\nsquare 5\n");
 				y = 3;
 			}
 			if(ver > 5){
 				//square 6 (3,6)
-				//System.out.println("\nsquare 6\n");
 				y = 6;
 			}
 		}
 		
 		if(hor > 5){
 			//square 7 (6,0)
-			//System.out.println("\nsquare 7\n");
 			x = 6;
 			if(ver > 2 && ver < 6){
 				//square 8 (6,3){
-				//System.out.println("\nsquare 1\n");
 				y = 3;
 			}
 			if(ver > 5){
-				//System.out.println("\nsquare 1\n");
 				//square 9 (6,6)
 				y = 6;
 			}
@@ -163,17 +154,14 @@ public class SudokuSolver{
 		}
 		int oldRow = row;
 		int oldColumn = column;
-		for(int num = 1; num <=9; num++){
-			//System.out.println("row: " + oldRow + " column: " + oldColumn + " num: " + num);
+		for(int num = 1; num <=boxSize; num++){
 			if(checkHor(result,oldRow,oldColumn,num) && checkVer(result,oldRow,oldColumn,num) && checkSquare(result,oldRow,oldColumn,num)){
 				result[oldRow][oldColumn] = num;
-				//printSudoku(result);
 				if(solveSudoku(result)){
 					return true;
 				}
 				result[oldRow][oldColumn] = 0;
 			}
-			
 		}
 		return false;
 	}
@@ -181,13 +169,14 @@ public class SudokuSolver{
 	public static void main(String[] args){
 		if(args.length < 1){
 			System.out.println("usage: \"java SudokuSolver filename.txt\"");
+			System.out.println("numbers in the file should be separated by a space, use '0' (zero) for empty square");
 			return;
 		}
 		SudokuSolver solver = new SudokuSolver();
 		solver.getSudoku(args[0]);
 		solver.unassigned();
 		if(!solver.solveSudoku(sudoku)){
-			System.out.println("fail");			
+			System.out.println("Unabled to solve the sudoku");			
 		}
 		
 	}
