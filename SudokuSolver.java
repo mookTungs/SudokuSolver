@@ -1,9 +1,5 @@
 import java.util.Scanner;
 import java.io.File;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
 
 public class SudokuSolver{
 	static int size = 3;
