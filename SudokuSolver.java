@@ -9,74 +9,63 @@ public class SudokuSolver{
 	static int column = 0;
 	static int[][] sudoku = new int[boxSize][boxSize];
 	
-	public void printSudoku(int[][] result){
-		for(int i=0;i<boxSize;i++){
-			for(int j=0;j<boxSize;j++){
-				System.out.print(" "+result[i][j]);
-				if((j+1)%size == 0 && (j+1) != boxSize){
-					System.out.print(" ");
-				}
-			}
-			System.out.println("");
-			if((i+1)%size == 0 && (i+1) != boxSize){
-				System.out.println("");
-			}
-		}
-		System.out.println("");
+	public SudokuSolver(int[][] grid){
+		sudoku = grid;
 	}
 	
-	public void getSudoku(String fileName){
-		File file = new File(fileName);
-		if(!file.isFile()){
-			System.out.println("Invalid file");
-			System.exit(0);
+	public boolean isNumberValid(int[][] grid){
+		for(int i = 0; i < boxSize; i++){
+			for(int j = 0; j < boxSize; j++){
+				if(grid[i][j] < 0 || grid[i][j] > 9){
+					return false;
+				}
+			}
 		}
-		try{
-			Scanner scanner = new Scanner(file);
-			int count = 0;
-			for(int i=0;i<boxSize;i++){
-				for(int j=0;j<boxSize;j++){
-					if(scanner.hasNextInt()){
-						sudoku[i][j] = scanner.nextInt();
-						count++;
+		return true;
+	}
+	
+	public boolean isSudokuValid(int[][] grid){
+		for(int i = 0; i < boxSize; i++){
+			for(int j = 0; j < boxSize; j++){
+				if(grid[i][j] != 0){
+					if(checkHor(grid,i,j,grid[i][j]) > 1 || checkVer(grid,i,j,grid[i][j]) > 1
+						|| checkSquare(grid,i,j,grid[i][j]) > 1){
+							return false;
 					}
+					
 				}
 			}
-			if(count < totalSize){
-				System.out.println("Invalid sudoku");
-				System.exit(0);
-			}
-		}catch(Exception e){
-			System.out.println(e);
-			System.exit(0);
 		}
+		return true;
 	}
 	
-	public boolean checkHor(int[][] result,int hor, int ver, int num){
+	public int checkHor(int[][] result,int hor, int ver, int num){
+		int count = 0;
 		for(int j = 0; j < boxSize; j++){
 			if(result[hor][j] == num){
-				return false;
+				count++;
 			}	
 		}
-		return true;
+		return count;
 	}
 	
-	public boolean checkVer(int[][] result,int hor, int ver, int num){
+	public int checkVer(int[][] result,int hor, int ver, int num){
+		int count = 0;
 		for(int i = 0; i < boxSize; i++){
 			if(result[i][ver] == num){
-				return false;
+				count++;
 			}	
 		}
-		return true;
+		return count;
 	}
 	
-	public boolean checkSquare(int[][] result,int hor, int ver, int num){
+	public int checkSquare(int[][] result,int hor, int ver, int num){
 		/*'''''''''''
 			1|2|3
 			4|5|6
 			7|8|9
 		'''''''''''''*/
-		
+		int count = 0;
 		//square 1 (0,0)
 		int x = 0;
 		int y = 0;
@@ -120,19 +109,19 @@ public class SudokuSolver{
 		for(int i = x; i <= (x+2); i++){
 			for(int j = y; j <= (y+2); j++){
 				if(result[i][j] == num){
-					return false;
+					count++;
 				}
 			}
 		}
 		
-		return true;
+		return count;
 	}
 	
-	public boolean unassigned(){
+	public boolean unassigned(int[][] s){
 		int count = 0;
 		for(int i = 0; i < boxSize; i++){
 			for(int j = 0; j < boxSize; j++){
-				if(sudoku[i][j] == 0){
+				if(s[i][j] == 0){
 					row = i;
 					column = j;
 					return true;
@@ -143,15 +132,15 @@ public class SudokuSolver{
 	}
 	
 
-	public boolean solveSudoku(int[][]result){
-		if(!unassigned()){
-			printSudoku(result);
+	public boolean solveSudoku(int[][] result){
+		if(!unassigned(result)){
 			return true;
 		}
 		int oldRow = row;
 		int oldColumn = column;
 		for(int num = 1; num <=boxSize; num++){
-			if(checkHor(result,oldRow,oldColumn,num) && checkVer(result,oldRow,oldColumn,num) && checkSquare(result,oldRow,oldColumn,num)){
+			if(checkHor(result,oldRow,oldColumn,num) == 0 && checkVer(result,oldRow,oldColumn,num) == 0 
+					&& checkSquare(result,oldRow,oldColumn,num) == 0){
 				result[oldRow][oldColumn] = num;
 				if(solveSudoku(result)){
 					return true;
@@ -161,20 +150,4 @@ public class SudokuSolver{
 		}
 		return false;
 	}
-	
-	public static void main(String[] args){
-		if(args.length < 1){
-			System.out.println("usage: \"java SudokuSolver filename.txt\"");
-			System.out.println("numbers in the file should be separated by a space, use '0' (zero) for empty square");
-			return;
-		}
-		SudokuSolver solver = new SudokuSolver();
-		solver.getSudoku(args[0]);
-		solver.unassigned();
-		if(!solver.solveSudoku(sudoku)){
-			System.out.println("Unabled to solve the sudoku");			
-		}
-		
-	}
-	
 }
