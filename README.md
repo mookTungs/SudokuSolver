@@ -2,7 +2,7 @@
 3x3 sudoku solver
 
 To compile:
-javac SudokuSolver.java
+javac SudokuGrid.java
 
 To run:
 java SudokuSolver
@@ -10,4 +10,4 @@ OR
 double click on SudokuSolver.jar
 
 NOTE:
-SudokuSolver could take a few minutes to find invalid sudoku
+SudokuSolver may take a few minutes to find invalid or unsolvable sudoku
